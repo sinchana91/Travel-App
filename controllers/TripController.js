@@ -30,4 +30,24 @@ const getAllTrips=async (req,res)=>{
     }
 }
 
-module.exports={createTrip,getTripDetails,getAllTrips};
+//update trip details
+const updateTrip=async (req,res)=>{
+    try{
+        const trip=await Trip.findByIdAndUpdate(req.params.id,req.body,{new:true});
+        res.status(200).json(trip);
+    }catch(err){
+        res.status(400).json({error:err.message});
+    }
+}
+
+//delete the trip
+const deleteTrip=async (req,res)=>{
+    try{
+        await Trip.findByIdAndDelete(req.params.id);
+        res.status(200).json({message:'Trip deleted successfully'});
+    }catch(err){
+        res.status(400).json({error:err.message});
+    }
+}
+
+module.exports={createTrip,getTripDetails,getAllTrips,updateTrip,deleteTrip};
