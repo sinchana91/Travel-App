@@ -32,7 +32,7 @@ const login=async (req,res)=>{
         res.status(400).json({error:err.message});
     }
 };
-
+//get user by id
 const getUser=async (req,res)=>{
     try{
         const user=await User.findById(req.user_id);
@@ -42,4 +42,34 @@ const getUser=async (req,res)=>{
     }
 };
 
-module.exports={signUp,login,getUser};
+//get user by name
+const getUserByName=async (req,res)=>{
+    try{
+        const user=await User.findOne({name:req.params.name});
+        res.status(200).json(user);
+    }catch(err){
+        res.status(400).json({error:err.message});
+    }
+};
+//get all the users
+const getAllUsers=async (req,res)=>{
+    try{
+        const users=await User.find();
+        res.status(200).json(users);
+    }catch(err){
+        res.status(400).json({error:err.message});
+    }
+};
+//update user info
+
+const updateUser=async (req,res)=>{
+    try{
+        const user=await User.findByIdAndUpdate(req.user_id,req.body,{new:true});
+        res.status(200).json(user);
+    }
+    catch(err){
+        res.status(400).json({error:err.message});
+    }
+};
+
+module.exports={signUp,login,getUser,getUserByName,updateUser,getAllUsers};
