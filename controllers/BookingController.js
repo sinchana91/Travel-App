@@ -1,4 +1,4 @@
-const Booking = require('../models/Booking');
+import Booking, { findById } from '../models/Booking';
 
 const createBooking = async (req, res) => {
     const { trip_id, type,details,cost } = req.body;
@@ -14,11 +14,11 @@ const createBooking = async (req, res) => {
 
 const getBookingDetails = async (req, res) => {
     try {
-        const booking = await Booking.findById(req.params.id);
+        const booking = await findById(req.params.id);
         res.status(200).json(booking);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
 
-module.exports = { createBooking, getBookingDetails };
+export default { createBooking, getBookingDetails };

@@ -1,13 +1,13 @@
-const User=require('../models/User');
-const jwt=require('jsonwebtoken');
-const bcrypt=require('bcrypt');
+import User, { findOne, findById, find, findByIdAndUpdate } from '../models/User';
+import { sign } from 'jsonwebtoken';
+import { compare } from 'bcrypt';
 
 const signUp=async (req,res)=>{
     const {name,email,password}=req.body;
     try{
         const user=new User({name,email,password});
         await user.save();
-        const token=jwt.sign({user_id:user._id},process.env.JWT_SECRET);
+        const token=sign({user_id:user._id},process.env.JWT_SECRET);
         res.status(201).json({token});
     }
     catch(err){
@@ -18,15 +18,15 @@ const signUp=async (req,res)=>{
 const login=async (req,res)=>{
     const {email,password}=req.body;
     try{
-        const user=await User.findOne({email});
+        const user=await findOne({email});
         if(!user){
             return res.status(400).json({error:'Invalid email or password'});
         }
-        const isMatch=await bcrypt.compare(password,user.password);
+        const isMatch=await compare(password,user.password);
         if(!isMatch){
             return res.status(400).json({error:'Invalid email or password'});
         }
-        const token=jwt.sign({user_id:user._id},process.env.JWT_SECRET);
+        const token=sign({user_id:user._id},process.env.JWT_SECRET);
         res.status(200).json({token});
     }catch(err){
         res.status(400).json({error:err.message});
@@ -35,7 +35,7 @@ const login=async (req,res)=>{
 //get user by id
 const getUser=async (req,res)=>{
     try{
-        const user=await User.findById(req.user_id);
+        const user=await findById(req.user_id);
         res.status(200).json(user);
     }catch(err){
         res.status(400).json({error:err.message});
@@ -45,7 +45,7 @@ const getUser=async (req,res)=>{
 //get user by name
 const getUserByName=async (req,res)=>{
     try{
-        const user=await User.findOne({name:req.params.name});
+        const user=await findOne({name:req.params.name});
         res.status(200).json(user);
     }catch(err){
         res.status(400).json({error:err.message});
@@ -54,7 +54,7 @@ const getUserByName=async (req,res)=>{
 //get all the users
 const getAllUsers=async (req,res)=>{
     try{
-        const users=await User.find();
+        const users=await find();
         res.status(200).json(users);
     }catch(err){
         res.status(400).json({error:err.message});
@@ -64,7 +64,7 @@ const getAllUsers=async (req,res)=>{
 
 const updateUser=async (req,res)=>{
     try{
-        const user=await User.findByIdAndUpdate(req.user_id,req.body,{new:true});
+        const user=await findByIdAndUpdate(req.user_id,req.body,{new:true});
         res.status(200).json(user);
     }
     catch(err){
@@ -72,4 +72,4 @@ const updateUser=async (req,res)=>{
     }
 };
 
-module.exports={signUp,login,getUser,getUserByName,updateUser,getAllUsers};
+export default{signUp,login,getUser,getUserByName,updateUser,getAllUsers};

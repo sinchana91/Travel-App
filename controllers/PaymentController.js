@@ -1,4 +1,4 @@
-const Payment=require('../models/Payment');
+import Payment, { findById } from '../models/Payment';
 
 const savePayment=async (req,res)=>{
     const { trip_id, amount,payment_date}=req.body;
@@ -13,12 +13,12 @@ const savePayment=async (req,res)=>{
 
 const getPaymentDetails=async (req,res)=>{
     try{
-        const payment=await Payment.findById(req.params.id);
+        const payment=await findById(req.params.id);
         res.status(200).json(payment);
     }catch(err){
         res.status(400).json({error:err.message});
     }
 };
 
-module.exports={savePayment,getPaymentDetails};
+export default{savePayment,getPaymentDetails};
 

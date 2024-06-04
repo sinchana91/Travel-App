@@ -1,4 +1,4 @@
-const Destination=require('../models/Destination');
+import Destination, { findById, find } from '../models/Destination';
 
 const createDestination=async (req,res)=>{
     const { name, location, description}=req.body;
@@ -15,7 +15,7 @@ const createDestination=async (req,res)=>{
 //get destination details
 const getDestinationDetails=async (req,res)=>{
     try{
-        const destination=await Destination.findById(req.params.id);
+        const destination=await findById(req.params.id);
         res.status(200).json(destination);
     }catch(err){
         res.status(400).json({error:err.message});
@@ -25,11 +25,11 @@ const getDestinationDetails=async (req,res)=>{
 //get all the destinations
 const getAllDestinations=async (req,res)=>{
     try{
-        const destinations=await Destination.find();
+        const destinations=await find();
         res.status(200).json(destinations);
     }catch(err){
         res.status(400).json({error:err.message});
     }
 }
 
-module.exports={createDestination,getDestinationDetails,getAllDestinations};
+export default{createDestination,getDestinationDetails,getAllDestinations};
