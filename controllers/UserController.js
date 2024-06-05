@@ -1,13 +1,20 @@
-import User, { findOne, findById, find, findByIdAndUpdate } from '../models/User';
-import { sign } from 'jsonwebtoken';
-import { compare } from 'bcrypt';
+import User from '../models/User.js';
+import jsonwebtoken from 'jsonwebtoken';
+import bcryptjs from 'bcryptjs';
+const { sign } = jsonwebtoken;
+const { hash, compare } = bcryptjs;
 
-const signUp=async (req,res)=>{
+export const signUp=async (req,res)=>{
     const {name,email,password}=req.body;
     try{
-        const user=new User({name,email,password});
+        const existingUser=await findOne({email});
+        if(existingUser){
+            return res.status(400).json({error:'User already exists'});
+        }
+        const hashedPassword=await hash(password,10);
+        const user=new User({name,email,password:hashedPassword});
         await user.save();
-        const token=sign({user_id:user._id},process.env.JWT_SECRET);
+        const token=sign({user_id:user._id},process.env.JWT_SECRET, {expiresIn:'1h'});
         res.status(201).json({token});
     }
     catch(err){
@@ -15,7 +22,7 @@ const signUp=async (req,res)=>{
     }
 };
 
-const login=async (req,res)=>{
+export const login=async (req,res)=>{
     const {email,password}=req.body;
     try{
         const user=await findOne({email});
@@ -33,7 +40,7 @@ const login=async (req,res)=>{
     }
 };
 //get user by id
-const getUser=async (req,res)=>{
+export const getUser=async (req,res)=>{
     try{
         const user=await findById(req.user_id);
         res.status(200).json(user);
@@ -43,7 +50,7 @@ const getUser=async (req,res)=>{
 };
 
 //get user by name
-const getUserByName=async (req,res)=>{
+export const getUserByName=async (req,res)=>{
     try{
         const user=await findOne({name:req.params.name});
         res.status(200).json(user);
@@ -52,7 +59,7 @@ const getUserByName=async (req,res)=>{
     }
 };
 //get all the users
-const getAllUsers=async (req,res)=>{
+export const getAllUsers=async (req,res)=>{
     try{
         const users=await find();
         res.status(200).json(users);
@@ -62,7 +69,7 @@ const getAllUsers=async (req,res)=>{
 };
 //update user info
 
-const updateUser=async (req,res)=>{
+export const updateUser=async (req,res)=>{
     try{
         const user=await findByIdAndUpdate(req.user_id,req.body,{new:true});
         res.status(200).json(user);
@@ -72,4 +79,3 @@ const updateUser=async (req,res)=>{
     }
 };
 
-export default{signUp,login,getUser,getUserByName,updateUser,getAllUsers};

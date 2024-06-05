@@ -1,6 +1,6 @@
-import Booking, { findById } from '../models/Booking';
+import Booking from '../models/Booking.js';
 
-const createBooking = async (req, res) => {
+export const createBooking = async (req, res) => {
     const { trip_id, type,details,cost } = req.body;
     try {
         const booking = new Booking({ trip_id,  type,details,cost  });
@@ -12,13 +12,12 @@ const createBooking = async (req, res) => {
     }
 }
 
-const getBookingDetails = async (req, res) => {
+export const getBookingDetails = async (req, res) => {
     try {
-        const booking = await findById(req.params.id);
+        const booking = await Booking.findById(req.params.id);
         res.status(200).json(booking);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
 
-export default { createBooking, getBookingDetails };

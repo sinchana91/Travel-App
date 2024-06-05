@@ -1,6 +1,6 @@
-import Trip, { findById, find, findByIdAndUpdate, findByIdAndDelete } from '../models/Trip';
+import Trip from '../models/Trip.js';
 
-const createTrip=async (req,res)=>{
+export const createTrip=async (req,res)=>{
     const { destination_id, start_date, end_date, bookings}=req.body;
     try{
         const trip=new Trip({user_id:req.user_id,destination_id, start_date, end_date, bookings});
@@ -12,7 +12,7 @@ const createTrip=async (req,res)=>{
     }
 }
 
-const getTripDetails=async (req,res)=>{
+export const getTripDetails=async (req,res)=>{
     try{
         const trip=await findById(req.params.id).populate('bookings');
         res.status(200).json(trip);
@@ -21,7 +21,7 @@ const getTripDetails=async (req,res)=>{
     }
 }
 
-const getAllTrips=async (req,res)=>{
+export const getAllTrips=async (req,res)=>{
     try{
         const trips=await find();
         res.status(200).json(trips);
@@ -31,7 +31,7 @@ const getAllTrips=async (req,res)=>{
 }
 
 //update trip details
-const updateTrip=async (req,res)=>{
+export const updateTrip=async (req,res)=>{
     try{
         const trip=await findByIdAndUpdate(req.params.id,req.body,{new:true});
         res.status(200).json(trip);
@@ -41,7 +41,7 @@ const updateTrip=async (req,res)=>{
 }
 
 //delete the trip
-const deleteTrip=async (req,res)=>{
+export const deleteTrip=async (req,res)=>{
     try{
         await findByIdAndDelete(req.params.id);
         res.status(200).json({message:'Trip deleted successfully'});
@@ -50,4 +50,3 @@ const deleteTrip=async (req,res)=>{
     }
 }
 
-export default{createTrip,getTripDetails,getAllTrips,updateTrip,deleteTrip};

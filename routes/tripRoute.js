@@ -1,7 +1,8 @@
 import express from 'express';   
-import { createTrip,getTripDetails,getAllTrips,updateTrip,deleteTrip} from '../controllers/userController.js';
-import { auth } from '../middlewares/authMiddleware.js';
-import {router} from 'express.Router';
+import { createTrip,getTripDetails,getAllTrips,updateTrip,deleteTrip} from '../controllers/TripController.js';
+import  auth  from '../middlewares/auth.js';
+
+const router = express.Router();
 
 router.post('/create', createTrip);
 router.get('/:id', auth,getTripDetails);

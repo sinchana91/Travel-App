@@ -1,12 +1,14 @@
 
-import { signUp,login,getUser,getUserByName,updateUser,getAllUsers} from '../controllers/userController.js';
-import { auth } from '../middlewares/authMiddleware.js';
-import {router} from 'express.Router';
+import { signUp,login,getUser,getUserByName,updateUser,getAllUsers} from '../controllers/UserController.js';
+import  auth  from '../middlewares/auth.js';
+import express from 'express';
+
+const router = express.Router();
 
 router.post('/signup', signUp);
 router.post('/login', login);
-router.get('/:id', auth,getUser);
-router.get('/:name', getUserByName);
+router.get('user/:id', auth,getUser);
+router.get('username/:name', getUserByName);
 router.put('/update/:id', updateUser);
 router.get('/', getAllUsers);
 

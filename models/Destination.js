@@ -1,4 +1,4 @@
-const mongoose=require('mongoose');
+import mongoose from 'mongoose';
 
 const destinationSchema=new mongoose.Schema({
     name:{type:String,required:true},
@@ -8,4 +8,4 @@ const destinationSchema=new mongoose.Schema({
 });
 
 const Destination=mongoose.model('Destination',destinationSchema);
-module.exports=Destination;
+export default Destination;
