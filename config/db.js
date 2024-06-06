@@ -1,15 +1,22 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config();
-const constDB=async()=>{
-    try{
-        await mongoose.connect(process.env.MONGO_URI,{
-            useNewUrlParser:true,
-            useUnifiedTopology:true
+import { connect } from 'mongoose';
+import { config } from 'dotenv';
+
+config();
+
+const connectDB = async () => {
+    try {
+        await connect(process.env.DATABASE_URL, {
+            
+            
+            serverSelectionTimeoutMS: 30000 // Increase timeout to 30 seconds
         });
         console.log('Connected to DB');
-    }catch(err){
-        console.log(err);
+    } catch (err) {
+        console.error('Failed to connect to DB:', err);
+        process.exit(1);
     }
-}
-module.exports=constDB;
+};
+
+connectDB();
+
+export default connectDB;

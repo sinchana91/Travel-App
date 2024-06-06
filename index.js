@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import express, { json } from 'express';
 import { config } from 'dotenv';
+import constDB from './config/db.js';
 config();
 
 const app = express();
@@ -14,12 +15,12 @@ import reviewRoute from './routes/reviewRoute.js';
 import tripRoute from './routes/tripRoute.js';
 import paymentRoute from './routes/paymentRoute.js';
 //route use
-app.use('/user', userRoute);
-app.use('/booking', bookingRoute);
-app.use('/destination', DestinationRoute);
-app.use('/review', reviewRoute);
-app.use('/trip', tripRoute);
-app.use('/payment', paymentRoute);
+app.use('/api/user', userRoute);
+app.use('/api/booking', bookingRoute);
+app.use('/api/destination', DestinationRoute);
+app.use('/api/review', reviewRoute);
+app.use('/api/trip', tripRoute);
+app.use('/api/payment', paymentRoute);
 
  const PORT=process.env.PORT || 3000;
  app.listen(PORT,()=>{
