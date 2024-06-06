@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import express, { json } from 'express';
-import { config } from 'dotenv';
-import constDB from './config/db.js';
-config();
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+dotenv.config();
+connectDB();
 
 const app = express();
 app.use(json());

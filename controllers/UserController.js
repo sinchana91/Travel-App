@@ -3,6 +3,8 @@ import jsonwebtoken from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
 const { sign } = jsonwebtoken;
 const { hash, compare } = bcryptjs;
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const signUp = async (req, res) => {
     const { name, email, password } = req.body;
@@ -13,8 +15,9 @@ export const signUp = async (req, res) => {
         }
         const hashedPassword = await hash(password, 10);
         const user = new User({ name, email, password: hashedPassword });
+        // console.log(user)
         await user.save();
-        const token = sign({ user_id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = sign({ user_id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
         res.status(201).json({ token });
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -24,15 +27,18 @@ export const signUp = async (req, res) => {
 export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).select('+password');
         if (!user) {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
+        // console.log(user);
+        // console.log(password);
+        // console.log(user.password);
         const isMatch = await compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
-        const token = sign({ user_id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = sign({ user_id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
         res.status(200).json({ token });
     } catch (err) {
         res.status(400).json({ error: err.message });
