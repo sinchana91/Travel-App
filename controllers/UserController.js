@@ -16,10 +16,10 @@ export const signUp = async (req, res) => {
         const hashedPassword = await hash(password, 10);
         const user = new User({ name, email, password: hashedPassword });
         // console.log(user)
-        
-        const token = sign({ user_id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-        user.tokens=user.tokens.concat({token})
         await user.save();
+        const token = sign({ user_id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        
+        
         res.status(201).json({ token });
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -41,7 +41,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
         const token = sign({ user_id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-        user.tokens=user.tokens.concat({token})
+        
         await user.save();
         res.status(200).json({ token });
     } catch (err) {
