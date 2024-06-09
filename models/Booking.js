@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema ,model} = mongoose;
 const bookingSchema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    
     trip_id: { type: Schema.Types.ObjectId, ref: 'Trip', required: true },
     type: { type: String, enum:['flight','hotel','activity'],required: true },
     details: { type: String, required: true },

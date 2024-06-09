@@ -1,11 +1,11 @@
 import Payment from '../models/Payment.js';
 
 export const savePayment=async (req,res)=>{
-    const { trip_id, amount,payment_date}=req.body;
+    const {user_id, trip_id, amount,payment_date}=req.body;
     try{
-        const payment=new Payment({user_id:req.user_id,trip_id, amount,payment_date});
+        const payment=new Payment({user_id,trip_id, amount,payment_date});
         await payment.save();
-        res.statues(201).json(payment);
+        res.status(201).json(payment);
     }catch(err){
         res.status(400).json({error:err.message});
     }
