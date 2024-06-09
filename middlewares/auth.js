@@ -1,11 +1,15 @@
 import jwt from 'jsonwebtoken';
 import  User  from '../models/User.js';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const auth=async(req,res,next)=>{
     try{
         const token=req.header('Authorization').replace('Bearer ','');
-        const data=jwt.verify(token,process.env.JWT_KEY);
-        const user=await User.findOne({_id:data._id,'tokens.token':token});
+        console.log(token);
+        const data=jwt.verify(token,process.env.SECRET_KEY);
+        console.log(data)
+        const user=await User.findOne({user_id:data._id,'tokens.token':token});
+        console.log(user);
         if(!user){
             throw new Error();
         }
@@ -13,6 +17,7 @@ const auth=async(req,res,next)=>{
         req.token=token;
         next();
     }catch(error){
+        console.log(error);
         res.status(401).send({error:'Not authorized to access this resource'});
     }
 };

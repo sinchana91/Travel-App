@@ -25,6 +25,12 @@ const userSchema = new Schema({
     date_of_birth:{
         type:Date
     },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 });
 //before saving hash the password
 // userSchema.pre('save', async function (next) {
